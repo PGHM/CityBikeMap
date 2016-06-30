@@ -11,6 +11,7 @@ android {
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -22,9 +23,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
     testCompile 'junit:junit:4.12'
-    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    androidTestCompile 'com.android.support:support-annotations:24.0.0'
+
     compile 'com.android.support:appcompat-v7:24.0.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
     compile 'com.jakewharton:butterknife:8.1.0'
     compile 'com.google.android.gms:play-services-maps:9.2.0'
     compile 'com.android.support:design:24.0.0'

@@ -1,13 +1,26 @@
 package com.pghm.citybikes;
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+import android.support.test.InstrumentationRegistry;
+import android.support.test.runner.AndroidJUnit4;
+import android.util.Log;
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+import com.pghm.citybikes.network.Callback;
+import com.pghm.citybikes.network.Requests;
+
+import org.json.JSONArray;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(AndroidJUnit4.class)
+public class ApplicationTest {
+
+    @Test
+    public void testBikeDataFetch() {
+        Requests.fetchBikeData(InstrumentationRegistry.getContext(), new Callback<JSONArray>() {
+            @Override
+            public void callback(JSONArray result) {
+                Log.d(Constants.LOG_NAME, "Huoh");
+            }
+        });
     }
 }
