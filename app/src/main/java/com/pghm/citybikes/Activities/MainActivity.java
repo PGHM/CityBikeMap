@@ -5,7 +5,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pghm.citybikes.Constants;
+import com.pghm.citybikes.Elements.NoSwipeViewPager;
 import com.pghm.citybikes.R;
 import com.pghm.citybikes.fragments.BikeStationListFragment;
 import com.pghm.citybikes.fragments.BikeStationMapFragment;
@@ -23,10 +23,9 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.container) ViewPager viewPager;
+    @BindView(R.id.container) NoSwipeViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
 
-    //TODO: no swipe viewpager
     private SectionsPagerAdapter sectionsPagerAdapter;
 
     @Override

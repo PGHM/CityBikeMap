@@ -32,7 +32,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <!-- Swipe must be disabled because it makes using the map very unintuitive -->
+    <com.pghm.citybikes.Elements.NoSwipeViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
