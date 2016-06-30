@@ -1,0 +1,28 @@
+[
+  {
+    "id": "A42",
+    "name": "Baana",
+    "x": 24.922583,
+    "y": 60.164159,
+    "bikesAvailable": 0,
+    "spacesAvailable": 20,
+    "allowDropoff": true,
+    "networks": [
+      "default"
+    ],
+    "realTimeData": true
+  },
+  {
+    "id": "A23",
+    "name": "Rautatientori \/ it\u00e4",
+    "x": 24.942522,
+    "y": 60.17076,
+    "bikesAvailable": 3,
+    "spacesAvailable": 17,
+    "allowDropoff": false,
+    "networks": [
+      "default"
+    ],
+    "realTimeData": true
+  }
+]
