@@ -1,4 +1,4 @@
-package com.pghm.citybikes.Network;
+package com.pghm.citybikes.network;
 
 import android.content.Context;
 

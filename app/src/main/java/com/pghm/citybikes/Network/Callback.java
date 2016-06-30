@@ -1,4 +1,4 @@
-package com.pghm.citybikes.Network;
+package com.pghm.citybikes.network;
 
 /**
  * Created by Jussi on 30.6.2016.

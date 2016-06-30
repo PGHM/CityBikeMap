@@ -37,6 +37,5 @@ public class Requests {
                     }
                 });
         NetworkSingleton.getInstance(context).getRequestQueue().add(request);
-        Log.d(Constants.LOG_NAME, NetworkSingleton.getInstance(context).toString());
     }
 }
