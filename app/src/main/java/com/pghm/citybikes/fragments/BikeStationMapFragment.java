@@ -100,8 +100,7 @@ public class BikeStationMapFragment extends Fragment {
                         .icon(BitmapDescriptorFactory.fromResource(
                                 Util.getBikeIconMapResource(station.getBikesAvailable())))
                         .title(station.getName())
-                        .snippet(String.format(getContext().getString(R.string.free_bikes),
-                                station.getBikesAvailable(), station.getTotalSpace()));
+                        .snippet(station.getFreeBikesText(getContext()));
                 Marker marker = map.addMarker(options);
                 markersById.put(station.getId(), marker);
             }
@@ -113,8 +112,7 @@ public class BikeStationMapFragment extends Fragment {
         for (BikeStation station : this.stations) {
             Marker marker = markersById.get(station.getId());
             if (marker != null) {
-                marker.setSnippet(String.format(getContext().getString(R.string.free_bikes),
-                        station.getBikesAvailable(), station.getTotalSpace()));
+                marker.setSnippet(station.getFreeBikesText(getContext()));
                 marker.setIcon(BitmapDescriptorFactory.fromResource(
                         Util.getBikeIconMapResource(station.getBikesAvailable())));
             }

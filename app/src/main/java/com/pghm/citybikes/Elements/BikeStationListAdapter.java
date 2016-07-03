@@ -55,8 +55,7 @@ public class BikeStationListAdapter extends ArrayAdapter<BikeStation> {
             TextView freeBikes = ButterKnife.findById(v, R.id.free_bikes);
 
             name.setText(station.getName());
-            freeBikes.setText(String.format(getContext().getString(R.string.free_bikes),
-                    station.getBikesAvailable(), station.getTotalSpace()));
+            freeBikes.setText(station.getFreeBikesText(getContext()));
             status.setImageDrawable(ContextCompat.getDrawable(getContext(),
                     Util.getBikeIconResource(station.getBikesAvailable())));
         }

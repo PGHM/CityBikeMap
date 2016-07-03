@@ -1,5 +1,9 @@
 package com.pghm.citybikes.models;
 
+import android.content.Context;
+
+import com.pghm.citybikes.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,6 +71,11 @@ public class BikeStation {
 
     public int getSpacesAvailable() {
         return spacesAvailable;
+    }
+
+    public String getFreeBikesText(Context context) {
+        return String.format(context.getString(R.string.free_bikes),
+                bikesAvailable, this.getTotalSpace());
     }
 
     public int getTotalSpace() {
