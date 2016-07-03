@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.pghm.citybikes.Constants;
 import com.pghm.citybikes.Elements.BikeStationFragmentHost;
 import com.pghm.citybikes.R;
 import com.pghm.citybikes.Util;
@@ -49,6 +51,8 @@ public class BikeStationMapFragment extends Fragment {
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
                 initializeStations(stations);
+                map.moveCamera(CameraUpdateFactory.newLatLng(Constants.DEFAULT_POSITION));
+                map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
             }
         });
         host.fragmentLoaded();
@@ -62,8 +66,10 @@ public class BikeStationMapFragment extends Fragment {
                 MarkerOptions options = new MarkerOptions()
                         .position(new LatLng(station.getLat(), station.getLon()))
                         .icon(BitmapDescriptorFactory.fromResource(
-                                Util.getBikeIconResource(station.getBikesAvailable())))
-                        .title(station.getName());
+                                Util.getBikeIconMapResource(station.getBikesAvailable())))
+                        .title(station.getName())
+                        .snippet(String.format(getContext().getString(R.string.free_bikes),
+                                station.getBikesAvailable(), station.getTotalSpace()));
                 Marker marker = map.addMarker(options);
                 markersById.put(station.getId(), marker);
             }
@@ -71,7 +77,16 @@ public class BikeStationMapFragment extends Fragment {
     }
 
     public void updateStations(final Collection<BikeStation> stations) {
-        //TODO: implement
+        this.stations = stations;
+        for (BikeStation station : this.stations) {
+            Marker marker = markersById.get(station.getId());
+            if (marker != null) {
+                marker.setSnippet(String.format(getContext().getString(R.string.free_bikes),
+                        station.getBikesAvailable(), station.getTotalSpace()));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(
+                        Util.getBikeIconMapResource(station.getBikesAvailable())));
+            }
+        }
     }
 
     @Override
