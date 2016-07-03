@@ -48,12 +48,12 @@ public class BikeStationListFragment extends Fragment {
         return view;
     }
 
-    public void initializeStations(final Collection<BikeStation> stations) {
-        //TODO: implement
-    }
-
     public void updateStations(final Collection<BikeStation> stations) {
-        //TODO: implement
+        listData.clear();
+        for (BikeStation station : stations) {
+            listData.add(station);
+        }
+        adapter.notifyDataSetChanged();
     }
 
         @Override

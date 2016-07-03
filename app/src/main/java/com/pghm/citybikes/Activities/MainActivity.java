@@ -155,13 +155,13 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     }
 
     public void initializeFragments(final Collection<BikeStation> stations) {
-        listFragment.initializeStations(stations);
         mapFragment.initializeStations(stations);
+        listFragment.updateStations(stations);
     }
 
     public void updateFragments(final Collection<BikeStation> stations) {
-        listFragment.updateStations(stations);
         mapFragment.updateStations(stations);
+        listFragment.updateStations(stations);
     }
 
     @Override
