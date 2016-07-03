@@ -1,7 +1,5 @@
 package com.pghm.citybikes;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 import com.pghm.citybikes.models.BikeStation;
@@ -19,9 +17,6 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /* Unit tests are written for pieces of code that can easily be unit tested. Activities and
  Fragments cannot be easily unit tested as they rely on Android SDK and mocking everything we need
@@ -91,18 +86,9 @@ public class UnitTests {
     }
 
     @Test
-    public void testGetBikeIcon() throws Exception {
-        Context context = mock(Context.class);
-        mockStatic(ContextCompat.class);
-        Drawable red = mock(Drawable.class);
-        Drawable yellow = mock(Drawable.class);
-        Drawable green = mock(Drawable.class);
-        when(ContextCompat.getDrawable(context, R.drawable.red)).thenReturn(red);
-        when(ContextCompat.getDrawable(context, R.drawable.yellow)).thenReturn(yellow);
-        when(ContextCompat.getDrawable(context, R.drawable.green)).thenReturn(green);
-
-        assertEquals(Util.getBikeIcon(context, 0), red);
-        assertEquals(Util.getBikeIcon(context, 1), yellow);
-        assertEquals(Util.getBikeIcon(context, 6), green);
+    public void testGetBikeIconResource() throws Exception {
+        assertEquals(Util.getBikeIconResource(0), R.drawable.red);
+        assertEquals(Util.getBikeIconResource(1), R.drawable.yellow);
+        assertEquals(Util.getBikeIconResource(6), R.drawable.green);
     }
 }

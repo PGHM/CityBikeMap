@@ -1,6 +1,7 @@
 package com.pghm.citybikes.Elements;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +57,8 @@ public class BikeStationListAdapter extends ArrayAdapter<BikeStation> {
             name.setText(station.getName());
             freeBikes.setText(String.format(getContext().getString(R.string.free_bikes),
                     station.getBikesAvailable(), station.getTotalSpace()));
-            status.setImageDrawable(Util.getBikeIcon(getContext(), station.getBikesAvailable()));
+            status.setImageDrawable(ContextCompat.getDrawable(getContext(),
+                    Util.getBikeIconResource(station.getBikesAvailable())));
         }
 
         return v;
