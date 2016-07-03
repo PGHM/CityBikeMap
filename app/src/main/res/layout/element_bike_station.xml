@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:baselineAligned="false"
+    android:paddingTop="@dimen/small_margin"
+    android:paddingBottom="@dimen/small_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
 
     <ImageView
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_weight="1"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_gravity="center_vertical"
         android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/free_bikes"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_alignParentLeft="true"
         android:src="@drawable/green" />
 
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:orientation="vertical">
+        android:layout_toRightOf="@id/status"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Rautatientori Itä" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/name"
-            android:text="Rautatientori Itä" />
+    <TextView
+        android:id="@id/free_bikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/status"
+        android:layout_below="@id/name"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/free_bikes" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/free_bikes"
-            android:text="@string/free_bikes" />
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
