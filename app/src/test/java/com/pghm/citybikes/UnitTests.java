@@ -1,14 +1,17 @@
 package com.pghm.citybikes;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 import com.pghm.citybikes.models.BikeStation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -18,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 /* Unit tests are written for pieces of code that can easily be unit tested. Activities and
  Fragments cannot be easily unit tested as they rely on Android SDK and mocking everything we need
@@ -28,6 +32,8 @@ import static org.mockito.Mockito.when;
  traditional way of writing business logic in the Activities and Fragments and the tests for code
  in these elements will be in the Application Tests that run on real device and simulate user input.
  */
+@RunWith(PowerMockRunner.class )
+@PrepareForTest(ContextCompat.class)
 public class UnitTests {
 
     @Test
@@ -87,14 +93,13 @@ public class UnitTests {
     @Test
     public void testGetBikeIcon() throws Exception {
         Context context = mock(Context.class);
-        Resources resources = mock(Resources.class);
+        mockStatic(ContextCompat.class);
         Drawable red = mock(Drawable.class);
         Drawable yellow = mock(Drawable.class);
         Drawable green = mock(Drawable.class);
-        when(context.getResources()).thenReturn(resources);
-        when(resources.getDrawable(R.drawable.red)).thenReturn(red);
-        when(resources.getDrawable(R.drawable.yellow)).thenReturn(yellow);
-        when(resources.getDrawable(R.drawable.green)).thenReturn(green);
+        when(ContextCompat.getDrawable(context, R.drawable.red)).thenReturn(red);
+        when(ContextCompat.getDrawable(context, R.drawable.yellow)).thenReturn(yellow);
+        when(ContextCompat.getDrawable(context, R.drawable.green)).thenReturn(green);
 
         assertEquals(Util.getBikeIcon(context, 0), red);
         assertEquals(Util.getBikeIcon(context, 1), yellow);
