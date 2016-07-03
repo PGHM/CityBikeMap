@@ -1,15 +1,10 @@
 package com.pghm.citybikes;
 
-import android.support.v4.content.ContextCompat;
-
 import com.pghm.citybikes.models.BikeStation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,8 +22,8 @@ import static org.junit.Assert.assertTrue;
  traditional way of writing business logic in the Activities and Fragments and the tests for code
  in these elements will be in the Application Tests that run on real device and simulate user input.
  */
-@RunWith(PowerMockRunner.class )
-@PrepareForTest(ContextCompat.class)
+//@RunWith(PowerMockRunner.class )
+//@PrepareForTest(ContextCompat.class)
 public class UnitTests {
 
     @Test
