@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.pghm.citybikes.Elements.BikeStationFragmentHost;
 import com.pghm.citybikes.R;
+import com.pghm.citybikes.models.BikeStation;
+
+import java.util.Collection;
 
 import butterknife.ButterKnife;
 
@@ -28,7 +31,15 @@ public class BikeStationListFragment extends Fragment {
         return view;
     }
 
-    @Override
+    public void initializeStations(final Collection<BikeStation> stations) {
+        //TODO: implement
+    }
+
+    public void updateStations(final Collection<BikeStation> stations) {
+        //TODO: implement
+    }
+
+        @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         try {

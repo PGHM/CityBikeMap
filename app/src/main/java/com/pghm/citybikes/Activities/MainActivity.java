@@ -25,8 +25,14 @@ import com.pghm.citybikes.network.Requests;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,9 +43,13 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     @BindView(R.id.container) NoSwipeViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
 
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture scheduledTask;
     private SectionsPagerAdapter sectionsPagerAdapter;
+    private BikeStationListFragment listFragment;
+    private BikeStationMapFragment mapFragment;
     private int fragmentsLoaded = 0;
-    private ArrayList<BikeStation> stations = new ArrayList<>();
+    private HashMap<String, BikeStation> stationsById = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,32 +67,38 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     synchronized public void fragmentLoaded() {
         fragmentsLoaded++;
         if (fragmentsLoaded == Constants.TAB_COUNT) {
+            getFragmentReferences();
             initializeBikeStations();
         }
     }
 
+    private void getFragmentReferences() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof BikeStationListFragment) {
+                listFragment = (BikeStationListFragment)fragment;
+            } else if (fragment instanceof BikeStationMapFragment) {
+                mapFragment = (BikeStationMapFragment)fragment;
+            }
+        }
+    }
+
     public void initializeBikeStations() {
-        Log.i(Constants.LOG_NAME, "1");
         Requests.fetchBikeData(this, new Callback<JSONArray>() {
             @Override
             public void callback(JSONArray result) {
                 if (result != null) {
                     for (int i = 0; i < result.length(); i++) {
                         try {
-                            stations.add(BikeStation.fromJson(result.getJSONObject(i)));
+                            BikeStation station = BikeStation.fromJson(result.getJSONObject(i));
+                            stationsById.put(station.getId(), station);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-                    initializeFragments();
+                    initializeFragments(stationsById.values());
+                    startBikeStationUpdateTask();
                 } else {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            initializeBikeStations();
-                        }
-                    }, Constants.BIKE_INITIALIZE_RETRY_DELAY);
+                    retryBikeStationInitialization();
                     Toast.makeText(MainActivity.this, R.string.could_not_load_bike_stations,
                             Toast.LENGTH_LONG).show();
                 }
@@ -90,8 +106,62 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         });
     }
 
-    public void initializeFragments() {
-        //TODO: implement
+    public void retryBikeStationInitialization() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initializeBikeStations();
+            }
+        }, Constants.BIKE_STATION_INITIALIZE_RETRY_DELAY);
+    }
+
+    public void startBikeStationUpdateTask() {
+        Runnable updateRunnable = new Runnable() {
+            public void run() {
+                updateBikeStations();
+            }
+        };
+
+        scheduledTask = scheduler.scheduleAtFixedRate(updateRunnable,
+                Constants.BIKE_STATION_UPDATE_INTERVAL,
+                Constants.BIKE_STATION_UPDATE_INTERVAL,
+                TimeUnit.MILLISECONDS);
+    }
+
+    /* Assume that station list does not change during the lifetime of the application */
+    public void updateBikeStations() {
+        Log.d(Constants.LOG_NAME, "Updating stations");
+        Requests.fetchBikeData(this, new Callback<JSONArray>() {
+            @Override
+            public void callback(JSONArray result) {
+                if (result != null) {
+                    for (int i = 0; i < result.length(); i++) {
+                        try {
+                            JSONObject stationObject = result.getJSONObject(i);
+                            String id = stationObject.getString("id");
+                            BikeStation station = stationsById.get(id);
+                            if (station != null) {
+                                station.updateFromJson(stationObject);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    updateFragments(stationsById.values());
+                }
+            }
+        });
+    }
+
+    public void initializeFragments(final Collection<BikeStation> stations) {
+        listFragment.initializeStations(stations);
+        mapFragment.initializeStations(stations);
+    }
+
+    public void updateFragments(final Collection<BikeStation> stations) {
+        listFragment.updateStations(stations);
+        mapFragment.updateStations(stations);
     }
 
     @Override

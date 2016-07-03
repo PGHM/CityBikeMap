@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 
 import com.pghm.citybikes.Elements.BikeStationFragmentHost;
 import com.pghm.citybikes.R;
+import com.pghm.citybikes.models.BikeStation;
+
+import java.util.Collection;
 
 import butterknife.ButterKnife;
 
@@ -26,6 +29,14 @@ public class BikeStationMapFragment extends Fragment {
         ButterKnife.bind(view);
         host.fragmentLoaded();
         return view;
+    }
+
+    public void initializeStations(final Collection<BikeStation> stations) {
+        //TODO: implement
+    }
+
+    public void updateStations(final Collection<BikeStation> stations) {
+        //TODO: implement
     }
 
     @Override
