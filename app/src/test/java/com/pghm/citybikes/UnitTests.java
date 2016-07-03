@@ -71,4 +71,10 @@ public class UnitTests {
         assertEquals(station.getSpacesAvailable(), 15);
         assertEquals(station.getBikesAvailable(), 5);
     }
+
+    @Test
+    public void testBikeStationTotalBikes() throws Exception {
+        BikeStation station = new BikeStation("ID47", "Rautatieasema", 60.24, 24.60, 0, 20, true);
+        assertEquals(station.getTotalSpace(), 20);
+    }
 }

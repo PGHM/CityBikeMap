@@ -69,6 +69,10 @@ public class BikeStation {
         return spacesAvailable;
     }
 
+    public int getTotalSpace() {
+        return bikesAvailable + spacesAvailable;
+    }
+
     public boolean allowDropoff() {
         return allowDropoff;
     }
