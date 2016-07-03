@@ -14,4 +14,14 @@ public class Util {
             return R.drawable.green;
         }
     }
+
+    public static int getBikeIconMapResource(int bikesAvailable) {
+        if (bikesAvailable == 0) {
+            return R.drawable.red_small;
+        } else if (bikesAvailable < Constants.LOW_BIKE_THRESHOLD) {
+            return R.drawable.yellow_small;
+        } else {
+            return R.drawable.green_small;
+        }
+    }
 }

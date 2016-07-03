@@ -85,5 +85,9 @@ public class UnitTests {
         assertEquals(Util.getBikeIconResource(0), R.drawable.red);
         assertEquals(Util.getBikeIconResource(1), R.drawable.yellow);
         assertEquals(Util.getBikeIconResource(6), R.drawable.green);
+
+        assertEquals(Util.getBikeIconMapResource(0), R.drawable.red_small);
+        assertEquals(Util.getBikeIconMapResource(1), R.drawable.yellow_small);
+        assertEquals(Util.getBikeIconMapResource(6), R.drawable.green_small);
     }
 }
