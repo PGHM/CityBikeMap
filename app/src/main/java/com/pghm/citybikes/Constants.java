@@ -17,6 +17,7 @@ public class Constants {
     public static final int MAP_FRAGMENT_POSITION = 1;
     public static final int TAB_COUNT = 2;
     public static final int LOW_BIKE_THRESHOLD = 5;
+    public static final int FINE_LOCATION_PERMISSION_REQUEST_CODE = 100;
     public static final int BIKE_STATION_INITIALIZE_RETRY_DELAY = 5000; // 5 seconds, milliseconds
     public static final int BIKE_STATION_UPDATE_INTERVAL = 60000; // 1 minute, milliseconds
 }

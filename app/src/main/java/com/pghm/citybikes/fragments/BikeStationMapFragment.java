@@ -1,8 +1,12 @@
 package com.pghm.citybikes.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +40,8 @@ public class BikeStationMapFragment extends Fragment {
     private HashMap<String, Marker> markersById = new HashMap<>();
 
     /* Required empty initializer */
-    public BikeStationMapFragment() {}
+    public BikeStationMapFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,7 +49,8 @@ public class BikeStationMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(view);
 
-        mapView = (MapView)view.findViewById(R.id.map);
+        requestPermissions();
+        mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -53,10 +59,36 @@ public class BikeStationMapFragment extends Fragment {
                 initializeStations(stations);
                 map.moveCamera(CameraUpdateFactory.newLatLng(Constants.DEFAULT_POSITION));
                 map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
+                if (hasFineLocationPermission()) {
+                    map.setMyLocationEnabled(true);
+                }
             }
         });
         host.fragmentLoaded();
         return view;
+    }
+
+    public void requestPermissions() {
+        if (!hasFineLocationPermission()) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    Constants.FINE_LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    public boolean hasFineLocationPermission() {
+        return ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        if (requestCode == Constants.FINE_LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                map.setMyLocationEnabled(true);
+            }
+        }
     }
 
     synchronized public void initializeStations(final Collection<BikeStation> stations) {
