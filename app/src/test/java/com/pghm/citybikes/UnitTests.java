@@ -12,6 +12,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+/* Unit tests are written for pieces of code that can easily be unit tested. Activities and
+ Fragments cannot be easily unit tested as they rely on Android SDK and mocking everything we need
+ from Android SDK would be tedious and sometimes impossible. Alternative would be to structure
+ Activities and Fragments in such manner that they would not contain any business logic and all the
+ logic would be exported to objects that the Activities initialize and use. But it is a trade off
+ between code readability and bloatedness against unit testability. In this project I use the
+ traditional way of writing business logic in the Activities and Fragments and the tests for code
+ in these elements will be in the Application Tests that run on real device and simulate user input.
+ */
 public class UnitTests {
 
     @Test

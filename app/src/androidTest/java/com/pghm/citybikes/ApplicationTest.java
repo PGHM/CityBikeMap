@@ -1,38 +1,22 @@
 package com.pghm.citybikes;
 
-import android.support.test.InstrumentationRegistry;
+import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.pghm.citybikes.network.Callback;
-import com.pghm.citybikes.network.Requests;
+import com.pghm.citybikes.activities.MainActivity;
 
-import org.json.JSONArray;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(AndroidJUnit4.class)
 public class ApplicationTest {
 
+    @Rule
+    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
+
     @Test
-    public void testBikeDataFetch() throws InterruptedException {
-
-        /* Because we are testing async operation we need to wait for the result so we use countdown
-           latch that waits with await() for certain time for countDown() to occur or times out */
-        final CountDownLatch signal = new CountDownLatch(1);
-
-        Requests.fetchBikeData(InstrumentationRegistry.getContext(), new Callback<JSONArray>() {
-            @Override
-            public void callback(JSONArray result) {
-                assertNotNull(result);
-                signal.countDown();
-            }
-        });
-
-        signal.await(10, TimeUnit.SECONDS);
+    public void testActivityLifeCycle() throws Exception {
+        //TODO: implement when MainActivity has been implemented
     }
 }
