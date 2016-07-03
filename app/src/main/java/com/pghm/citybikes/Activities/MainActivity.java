@@ -9,8 +9,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.pghm.citybikes.Constants;
@@ -162,23 +160,6 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     public void updateFragments(final Collection<BikeStation> stations) {
         mapFragment.updateStations(stations);
         listFragment.updateStations(stations);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
