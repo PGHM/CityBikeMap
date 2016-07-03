@@ -11,4 +11,5 @@ public class Constants {
     public static final int LIST_FRAGMENT_POSITION = 0;
     public static final int MAP_FRAGMENT_POSITION = 1;
     public static final int TAB_COUNT = 2;
+    public static final int BIKE_INITIALIZE_RETRY_DELAY = 5000; // 5 seconds, in milliseconds
 }

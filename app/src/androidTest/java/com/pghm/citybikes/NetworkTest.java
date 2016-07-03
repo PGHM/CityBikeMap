@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(AndroidJUnit4.class)
 public class NetworkTest {
 
+    //TODO: test with error input too
     @Test
     public void testBikeDataFetch() throws InterruptedException {
         /* Because we are testing async operation we need to wait for the result so we use countdown

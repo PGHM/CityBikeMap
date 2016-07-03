@@ -17,7 +17,7 @@ public class NetworkSingleton {
         requestQueue = Volley.newRequestQueue(context);
     }
 
-    public static NetworkSingleton getInstance(Context context){
+    public static NetworkSingleton getInstance(Context context) {
         if(instance == null){
             instance = new NetworkSingleton(context);
         }
