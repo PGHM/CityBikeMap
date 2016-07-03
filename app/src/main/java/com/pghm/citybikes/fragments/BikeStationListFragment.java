@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.pghm.citybikes.Elements.BikeStationFragmentHost;
 import com.pghm.citybikes.Elements.BikeStationListAdapter;
 import com.pghm.citybikes.R;
+import com.pghm.citybikes.Util;
 import com.pghm.citybikes.models.BikeStation;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class BikeStationListFragment extends Fragment {
         for (BikeStation station : stations) {
             listData.add(station);
         }
+        Util.sortStationsByName(listData);
         adapter.notifyDataSetChanged();
     }
 

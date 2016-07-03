@@ -1,5 +1,11 @@
 package com.pghm.citybikes;
 
+import com.pghm.citybikes.models.BikeStation;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * Created by Jussi on 3.7.2016.
  */
@@ -22,6 +28,19 @@ public class Util {
             return R.drawable.yellow_small;
         } else {
             return R.drawable.green_small;
+        }
+    }
+
+    public static void sortStationsByName(List<BikeStation> stations) {
+        Collections.sort(stations, new NameComparator());
+    }
+
+    public static class NameComparator implements Comparator<BikeStation> {
+        @Override
+        public int compare(BikeStation lhs, BikeStation rhs) {
+            String left = lhs.getName();
+            String right = rhs.getName();
+            return left.compareTo(right);
         }
     }
 }

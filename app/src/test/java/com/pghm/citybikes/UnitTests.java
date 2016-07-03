@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -90,6 +91,22 @@ public class UnitTests {
         Context context = mock(Context.class);
         when(context.getString(R.string.free_bikes)).thenReturn("Free bikes: %1$s / %2$s");
         assertEquals(station.getFreeBikesText(context), "Free bikes: 5 / 20");
+    }
+
+    @Test
+    public void testBikeStationSorting() throws Exception {
+        BikeStation station = new BikeStation("ID49", "Valimo", 60.24, 24.60, 5, 15, true);
+        BikeStation station2 = new BikeStation("ID47", "Rautatieasema", 60.24, 24.60, 5, 15, true);
+        BikeStation station3 = new BikeStation("ID48", "Baana", 60.24, 24.60, 5, 15, true);
+        List<BikeStation> stations = new ArrayList<>();
+        stations.add(station);
+        stations.add(station2);
+        stations.add(station3);
+        Util.sortStationsByName(stations);
+
+        assertEquals(stations.get(0).getName(), "Baana");
+        assertEquals(stations.get(1).getName(), "Rautatieasema");
+        assertEquals(stations.get(2).getName(), "Valimo");
     }
 
     @Test
