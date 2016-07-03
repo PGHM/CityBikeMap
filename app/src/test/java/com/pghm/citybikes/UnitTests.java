@@ -3,6 +3,7 @@ package com.pghm.citybikes;
 import com.pghm.citybikes.models.BikeStation;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.InputStream;
@@ -57,5 +58,17 @@ public class UnitTests {
     private String convertStreamToString(InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    @Test
+    public void testBikeStationUpdating() throws Exception {
+        BikeStation station = new BikeStation("ID47", "Rautatieasema", 60.24, 24.60, 0, 20, true);
+        JSONObject updateObject = new JSONObject();
+        updateObject.put("bikesAvailable", 5);
+        updateObject.put("spacesAvailable", 15);
+        station.updateFromJson(updateObject);
+
+        assertEquals(station.getSpacesAvailable(), 15);
+        assertEquals(station.getBikesAvailable(), 5);
     }
 }

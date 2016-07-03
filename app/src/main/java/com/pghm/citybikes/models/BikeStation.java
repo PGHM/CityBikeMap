@@ -27,21 +27,22 @@ public class BikeStation {
         this.allowDropoff = allowDropoff;
     }
 
-    public static BikeStation fromJson(JSONObject obj) {
-        try {
-            return new BikeStation(
-                    obj.getString("id"),
-                    obj.getString("name"),
-                    obj.getDouble("y"),
-                    obj.getDouble("x"),
-                    obj.getInt("bikesAvailable"),
-                    obj.getInt("spacesAvailable"),
-                    obj.getBoolean("allowDropoff")
-            );
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static BikeStation fromJson(JSONObject obj) throws JSONException {
+        return new BikeStation(
+                obj.getString("id"),
+                obj.getString("name"),
+                obj.getDouble("y"),
+                obj.getDouble("x"),
+                obj.getInt("bikesAvailable"),
+                obj.getInt("spacesAvailable"),
+                obj.getBoolean("allowDropoff")
+        );
+    }
+
+    /* Assume that bike station id, name or location does not change during the lifetime of the app */
+    public void updateFromJson(JSONObject obj) throws JSONException {
+        bikesAvailable = obj.getInt("bikesAvailable");
+        spacesAvailable = obj.getInt("spacesAvailable");
     }
 
     public String getId() {
