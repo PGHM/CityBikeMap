@@ -70,6 +70,15 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         }
     }
 
+    @Override
+    public void centerMapOnStation(String id) {
+        BikeStation station = stationsById.get(id);
+        if (station != null) {
+            viewPager.setCurrentItem(Constants.MAP_FRAGMENT_POSITION);
+            mapFragment.centerMapOnStation(station);
+        }
+    }
+
     private void getFragmentReferences() {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof BikeStationListFragment) {
@@ -160,6 +169,13 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     public void updateFragments(final Collection<BikeStation> stations) {
         mapFragment.updateStations(stations);
         listFragment.updateStations(stations);
+    }
+
+    @Override
+    public void onDestroy() {
+        scheduledTask.cancel(true);
+        scheduler.shutdownNow();
+        super.onDestroy();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
