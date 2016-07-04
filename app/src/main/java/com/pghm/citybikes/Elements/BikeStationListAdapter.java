@@ -22,18 +22,12 @@ import butterknife.ButterKnife;
  */
 public class BikeStationListAdapter extends ArrayAdapter<BikeStation> {
 
-    private BikeStationFragmentHost host;
-
-    public BikeStationListAdapter(Context context, int textViewResourceId,
-                                  BikeStationFragmentHost host) {
+    public BikeStationListAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
-        this.host = host;
     }
 
-    public BikeStationListAdapter(Context context, int resource, List<BikeStation> items,
-                                  BikeStationFragmentHost host) {
+    public BikeStationListAdapter(Context context, int resource, List<BikeStation> items) {
         super(context, resource, items);
-        this.host = host;
     }
 
     @Override

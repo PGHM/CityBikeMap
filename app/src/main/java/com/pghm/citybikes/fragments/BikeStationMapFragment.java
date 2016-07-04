@@ -119,6 +119,15 @@ public class BikeStationMapFragment extends Fragment {
         }
     }
 
+    public void centerMapOnStation(BikeStation station) {
+        LatLng position = new LatLng(station.getLat(), station.getLon());
+        map.animateCamera(CameraUpdateFactory.newLatLng(position));
+        Marker marker = markersById.get(station.getId());
+        if (marker != null) {
+            marker.showInfoWindow();
+        }
+    }
+
     @Override
     public void onResume() {
         mapView.onResume();

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,9 +42,15 @@ public class BikeStationListFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         adapter = new BikeStationListAdapter(
-                getActivity(), R.layout.element_bike_station, listData, host);
+                getActivity(), R.layout.element_bike_station, listData);
         list.setEmptyView(emptyView);
         list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                host.centerMapOnStation(listData.get(i).getId());
+            }
+        });
 
         host.fragmentLoaded();
         return view;

@@ -8,4 +8,5 @@ package com.pghm.citybikes.Elements;
 public interface BikeStationFragmentHost {
     /* Fragments can let the activity know that they are ready by using this method */
     void fragmentLoaded();
+    void centerMapOnStation(String id);
 }
