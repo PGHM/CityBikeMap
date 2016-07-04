@@ -22,6 +22,7 @@ public class Requests {
                 Constants.BIKE_DATA_URL, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Log.d(Constants.LOG_NAME, response.toString());
                         try {
                             callback.callback(response.getJSONArray("stations"));
                         } catch (JSONException e) {
