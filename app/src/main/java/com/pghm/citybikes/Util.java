@@ -59,4 +59,11 @@ public class Util {
         field.setAccessible(true);
         field.set(null, value);
     }
+
+    public static Object getPrivateVariable(Class clazz, String fieldName, Object clazzObject)
+            throws IllegalAccessException, NoSuchFieldException {
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return field.get(clazzObject);
+    }
 }

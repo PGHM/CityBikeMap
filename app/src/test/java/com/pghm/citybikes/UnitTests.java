@@ -41,6 +41,14 @@ public class UnitTests {
     }
 
     @Test
+    public void testGetPrivateVariable() throws Exception {
+        BikeStation station = new BikeStation("ID47", "Rautatieasema", 60.24, 24.60, 1, 20, true);
+        int bikesAvailable = (Integer)Util.getPrivateVariable(
+                BikeStation.class, "bikesAvailable", station);
+        assertEquals(bikesAvailable, 1);
+    }
+
+    @Test
     public void testBikeStationParsing() throws Exception {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("bikeData.json");
         String input = Util.convertStreamToString(in);
