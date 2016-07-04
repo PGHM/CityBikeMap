@@ -27,6 +27,8 @@ import static org.mockito.Mockito.when;
  between code readability and bloatedness against unit testability. In this project I use the
  traditional way of writing business logic in the Activities and Fragments and the tests for code
  in these elements will be in the Application Tests that run on real device and simulate user input.
+ You can also simulate Android in JVM to achieve unit tests without real device, but I could not
+ get any of those frameworks to work with this project.
  */
 //@RunWith(PowerMockRunner.class )
 //@PrepareForTest(ContextCompat.class)
@@ -36,12 +38,6 @@ public class UnitTests {
     public void testConvertStreamToString() {
         InputStream is = new ByteArrayInputStream("test string".getBytes());
         assertEquals(Util.convertStreamToString(is), "test string");
-    }
-
-    @Test
-    public void testInjectConstants() throws Exception {
-        Util.injectConstant("BIKE_DATA_URL", "not really url");
-        assertEquals(Constants.BIKE_DATA_URL, "not really url");
     }
 
     @Test

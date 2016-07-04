@@ -4,7 +4,6 @@ import com.pghm.citybikes.models.BikeStation;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,12 +57,6 @@ public class Util {
             throws NoSuchFieldException, IllegalAccessException  {
         Field field = Constants.class.getDeclaredField(fieldName);
         field.setAccessible(true);
-
-        /* Trick to be able to set final fields, pretty scary actually... */
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
         field.set(null, value);
     }
 }
