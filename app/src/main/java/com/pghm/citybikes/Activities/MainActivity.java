@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
 
     private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture scheduledTask;
-    private SectionsPagerAdapter sectionsPagerAdapter;
     private BikeStationListFragment listFragment;
     private BikeStationMapFragment mapFragment;
     private int fragmentsLoaded = 0;
@@ -56,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
+                getSupportFragmentManager());
         viewPager.setAdapter(sectionsPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
