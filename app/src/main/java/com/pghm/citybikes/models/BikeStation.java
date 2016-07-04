@@ -43,7 +43,7 @@ public class BikeStation {
         );
     }
 
-    /* Assume that bike station id, name or location does not change during the lifetime of the app */
+    /* Assume that bike station id, name or location do not change during the lifetime of the app */
     public void updateFromJson(JSONObject obj) throws JSONException {
         bikesAvailable = obj.getInt("bikesAvailable");
         spacesAvailable = obj.getInt("spacesAvailable");
