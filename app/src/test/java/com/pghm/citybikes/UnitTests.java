@@ -30,8 +30,6 @@ import static org.mockito.Mockito.when;
  You can also simulate Android in JVM to achieve unit tests without real device, but I could not
  get any of those frameworks to work with this project.
  */
-//@RunWith(PowerMockRunner.class )
-//@PrepareForTest(ContextCompat.class)
 public class UnitTests {
 
     @Test

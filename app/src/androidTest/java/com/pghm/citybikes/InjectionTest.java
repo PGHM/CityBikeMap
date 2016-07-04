@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
  */
 
 /* Reflection works differently in Dalvik it seems, so we must test this method here with real
-   device instead of standard unit test */
+   device instead of standard unit test with JVM */
 @RunWith(AndroidJUnit4.class)
 public class InjectionTest {
 
