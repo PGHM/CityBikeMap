@@ -1,7 +1,7 @@
 {"stations":
   [
     {
-      "id": "A42",
+      "id": "1",
       "name": "Baana",
       "x": 24.922583,
       "y": 60.164159,
@@ -14,7 +14,7 @@
       "realTimeData": true
     },
     {
-      "id": "A23",
+      "id": "2",
       "name": "Rautatientori \/ it\u00e4",
       "x": 24.942522,
       "y": 60.17076,
