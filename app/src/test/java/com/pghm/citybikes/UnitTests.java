@@ -34,7 +34,7 @@ public class UnitTests {
     @Test
     public void testBikeStationParsing() throws Exception {
         InputStream in = this.getClass().getClassLoader().getResourceAsStream("bikeData.json");
-        String input = convertStreamToString(in);
+        String input = Util.convertStreamToString(in);
         JSONArray stations = new JSONArray(input);
         ArrayList<BikeStation> results = new ArrayList<>();
 
@@ -60,11 +60,6 @@ public class UnitTests {
         assertEquals(station2.getBikesAvailable(), 3);
         assertEquals(station2.getSpacesAvailable(), 17);
         assertFalse(station2.allowDropoff());
-    }
-
-    private String convertStreamToString(InputStream is) {
-        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-        return s.hasNext() ? s.next() : "";
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.pghm.citybikes;
 
 import com.pghm.citybikes.models.BikeStation;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -42,5 +43,10 @@ public class Util {
             String right = rhs.getName();
             return left.compareTo(right);
         }
+    }
+
+    public static String convertStreamToString(InputStream is) {
+        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+        return s.hasNext() ? s.next() : "";
     }
 }
