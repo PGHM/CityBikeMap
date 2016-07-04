@@ -3,6 +3,8 @@ package com.pghm.citybikes;
 import com.pghm.citybikes.models.BikeStation;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -48,5 +50,20 @@ public class Util {
     public static String convertStreamToString(InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    /* Should only be used in tests, it would really not even make sense to inject constants in
+       normal code */
+    public static void injectConstant(String fieldName, Object value)
+            throws NoSuchFieldException, IllegalAccessException  {
+        Field field = Constants.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+
+        /* Trick to be able to set final fields, pretty scary actually... */
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+
+        field.set(null, value);
     }
 }

@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,18 @@ import static org.mockito.Mockito.when;
 //@RunWith(PowerMockRunner.class )
 //@PrepareForTest(ContextCompat.class)
 public class UnitTests {
+
+    @Test
+    public void testConvertStreamToString() {
+        InputStream is = new ByteArrayInputStream("test string".getBytes());
+        assertEquals(Util.convertStreamToString(is), "test string");
+    }
+
+    @Test
+    public void testInjectConstants() throws Exception {
+        Util.injectConstant("BIKE_DATA_URL", "not really url");
+        assertEquals(Constants.BIKE_DATA_URL, "not really url");
+    }
 
     @Test
     public void testBikeStationParsing() throws Exception {
