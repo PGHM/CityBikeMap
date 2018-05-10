@@ -173,14 +173,18 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
 
     @Override
     public void onDestroy() {
-        scheduledTask.cancel(true);
+        if (scheduledTask != null) {
+            scheduledTask.cancel(true);
+        }
         scheduler.shutdownNow();
         super.onDestroy();
     }
 
     @Override
     public void onPause() {
-        scheduledTask.cancel(true);
+        if (scheduledTask != null) {
+            scheduledTask.cancel(true);
+        }
         super.onPause();
     }
 
