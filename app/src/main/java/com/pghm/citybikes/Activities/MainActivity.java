@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
                         }
                     }
                     initializeFragments(stationsById.values());
-                    startBikeStationUpdateTask();
+                    startBikeStationUpdateTask(true);
                 } else {
                     retryBikeStationInitialization();
                     Toast.makeText(MainActivity.this, R.string.could_not_load_bike_stations,
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         }, Constants.BIKE_STATION_INITIALIZE_RETRY_DELAY);
     }
 
-    public void startBikeStationUpdateTask() {
+    public void startBikeStationUpdateTask(boolean startDelay) {
         Runnable updateRunnable = new Runnable() {
             public void run() {
                 updateBikeStations();
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         };
 
         scheduledTask = scheduler.scheduleAtFixedRate(updateRunnable,
-                Constants.BIKE_STATION_UPDATE_INTERVAL,
+                startDelay ? Constants.BIKE_STATION_UPDATE_INTERVAL : 0,
                 Constants.BIKE_STATION_UPDATE_INTERVAL,
                 TimeUnit.MILLISECONDS);
     }
@@ -176,6 +176,20 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
         scheduledTask.cancel(true);
         scheduler.shutdownNow();
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        scheduledTask.cancel(true);
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        if (scheduledTask != null && scheduledTask.isCancelled()) {
+            startBikeStationUpdateTask(false);
+        }
+        super.onResume();
     }
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
