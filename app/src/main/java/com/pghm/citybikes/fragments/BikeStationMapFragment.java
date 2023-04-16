@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -56,12 +58,20 @@ public class BikeStationMapFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 map = googleMap;
-                initializeStations(stations);
-                map.moveCamera(CameraUpdateFactory.newLatLng(Constants.DEFAULT_POSITION));
-                map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
-                if (hasFineLocationPermission()) {
-                    map.setMyLocationEnabled(true);
-                }
+                final Handler handler = new Handler(Looper.getMainLooper());
+
+                // Seems that delaying the call a bit makes the map centering actually work
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initializeStations(stations);
+                        map.moveCamera(CameraUpdateFactory.newLatLng(Constants.DEFAULT_POSITION));
+                        map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
+                        if (hasFineLocationPermission()) {
+                            map.setMyLocationEnabled(true);
+                        }
+                    }
+                }, 100);
             }
         });
         host.fragmentLoaded();
