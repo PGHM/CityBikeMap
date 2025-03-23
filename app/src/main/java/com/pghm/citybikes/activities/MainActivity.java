@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
             initializeStationMarkers(stationsById.values());
             map.setMapColorScheme(MapColorScheme.FOLLOW_SYSTEM);
+            map.getUiSettings().setMapToolbarEnabled(false);
             map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
             setMyLocationEnabled();
             setInitialLocation();
