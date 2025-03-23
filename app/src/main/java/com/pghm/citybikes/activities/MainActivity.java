@@ -1,27 +1,33 @@
 package com.pghm.citybikes.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.pghm.citybikes.Constants;
 import com.pghm.citybikes.R;
-import com.pghm.citybikes.elements.BikeStationFragmentHost;
-import com.pghm.citybikes.elements.NoSwipeViewPager;
-import com.pghm.citybikes.fragments.BikeStationListFragment;
-import com.pghm.citybikes.fragments.BikeStationMapFragment;
+import com.pghm.citybikes.Util;
 import com.pghm.citybikes.models.BikeStation;
-import com.pghm.citybikes.network.Callback;
 import com.pghm.citybikes.network.Requests;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,102 +38,113 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class MainActivity extends AppCompatActivity implements BikeStationFragmentHost {
-
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.container) NoSwipeViewPager viewPager;
-    @BindView(R.id.tabs) TabLayout tabLayout;
+public class MainActivity extends AppCompatActivity {
 
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture scheduledTask;
-    private BikeStationListFragment listFragment;
-    private BikeStationMapFragment mapFragment;
-    private int fragmentsLoaded = 0;
+    private ScheduledFuture<?> scheduledTask;
+
+    private MapView mapView;
+    private GoogleMap map;
+    private FusedLocationProviderClient fusedLocationClient;
     private final HashMap<String, BikeStation> stationsById = new HashMap<>();
+    private final HashMap<String, Marker> markersById = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(
-                getSupportFragmentManager());
-        viewPager.setAdapter(sectionsPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        requestPermissions();
+
+        mapView = findViewById(R.id.map);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(googleMap -> {
+            map = googleMap;
+            final Handler handler = new Handler(Looper.getMainLooper());
+
+            initializeStationMarkers(stationsById.values());
+            map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
+            setMyLocationEnabled();
+            setInitialLocation();
+        });
+
+        initializeBikeStations();
     }
 
     @Override
-    synchronized public void fragmentLoaded() {
-        fragmentsLoaded++;
-        if (fragmentsLoaded == Constants.TAB_COUNT) {
-            getFragmentReferences();
-            initializeBikeStations();
+    public void onDestroy() {
+        if (scheduledTask != null) {
+            scheduledTask.cancel(true);
         }
+        scheduler.shutdownNow();
+
+        super.onDestroy();
+
+        mapView.onDestroy();
     }
 
     @Override
-    public void centerMapOnStation(String id) {
-        BikeStation station = stationsById.get(id);
-        if (station != null) {
-            viewPager.setCurrentItem(Constants.MAP_FRAGMENT_POSITION);
-            mapFragment.centerMapOnStation(station);
+    public void onPause() {
+        if (scheduledTask != null) {
+            scheduledTask.cancel(true);
         }
+
+        super.onPause();
+
+        mapView.onPause();
     }
 
-    private void getFragmentReferences() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if (fragment instanceof BikeStationListFragment) {
-                listFragment = (BikeStationListFragment)fragment;
-            } else if (fragment instanceof BikeStationMapFragment) {
-                mapFragment = (BikeStationMapFragment)fragment;
-            }
+    @Override
+    public void onResume() {
+        mapView.onResume();
+
+        if (scheduledTask != null && scheduledTask.isCancelled()) {
+            startBikeStationUpdateTask(false);
         }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
     }
 
     public void initializeBikeStations() {
-        Requests.fetchBikeData(this, new Callback<JSONArray>() {
-            @Override
-            public void callback(JSONArray result) {
-                if (result != null) {
-                    for (int i = 0; i < result.length(); i++) {
-                        try {
-                            BikeStation station = BikeStation.fromJson(result.getJSONObject(i));
-                            stationsById.put(station.getId(), station);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        Requests.fetchBikeData(this, result -> {
+            if (result != null) {
+                for (int i = 0; i < result.length(); i++) {
+                    try {
+                        BikeStation station = BikeStation.fromJson(result.getJSONObject(i));
+                        stationsById.put(station.getId(), station);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    initializeFragments(stationsById.values());
-                    startBikeStationUpdateTask(true);
-                } else {
-                    retryBikeStationInitialization();
-                    Toast.makeText(MainActivity.this, R.string.could_not_load_bike_stations,
-                            Toast.LENGTH_LONG).show();
                 }
+                initializeStationMarkers(stationsById.values());
+                startBikeStationUpdateTask(true);
+            } else {
+                retryBikeStationInitialization();
+                Toast.makeText(MainActivity.this, R.string.could_not_load_bike_stations,
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
 
     public void retryBikeStationInitialization() {
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initializeBikeStations();
-            }
-        }, Constants.BIKE_STATION_INITIALIZE_RETRY_DELAY);
+        handler.postDelayed(
+                this::initializeBikeStations,
+                Constants.BIKE_STATION_INITIALIZE_RETRY_DELAY
+        );
     }
 
     public void startBikeStationUpdateTask(boolean startDelay) {
-        Runnable updateRunnable = this::updateBikeStations;
-
         scheduledTask = scheduler.scheduleWithFixedDelay(
-                updateRunnable,
+                this::updateBikeStations,
                 startDelay ? Constants.BIKE_STATION_UPDATE_INTERVAL : 0,
                 Constants.BIKE_STATION_UPDATE_INTERVAL,
                 TimeUnit.MILLISECONDS
@@ -137,93 +154,126 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     /* Assume that station list does not change during the lifetime of the application */
     public void updateBikeStations() {
         Log.d(Constants.LOG_NAME, "Updating stations");
-        Requests.fetchBikeData(this, new Callback<JSONArray>() {
-            @Override
-            public void callback(JSONArray result) {
-                if (result != null) {
-                    for (int i = 0; i < result.length(); i++) {
-                        try {
-                            JSONObject stationObject = result.getJSONObject(i);
-                            String id = stationObject.getString("id");
-                            BikeStation station = stationsById.get(id);
-                            if (station != null) {
-                                station.updateFromJson(stationObject);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        Requests.fetchBikeData(this, result -> {
+            if (result != null) {
+                for (int i = 0; i < result.length(); i++) {
+                    try {
+                        JSONObject stationObject = result.getJSONObject(i);
+                        String id = stationObject.getString("id");
+                        BikeStation station = stationsById.get(id);
+                        if (station != null) {
+                            station.updateFromJson(stationObject);
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    updateFragments(stationsById.values());
                 }
+                updateStationMarkers(stationsById.values());
             }
         });
     }
 
-    public void initializeFragments(final Collection<BikeStation> stations) {
-        mapFragment.initializeStations(stations);
-        listFragment.updateStations(stations);
+    private void requestPermissions() {
+        if (!hasFineLocationPermission()) {
+            requestPermissions(
+                    new String[]{
+                            Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION
+                    },
+                    Constants.LOCATION_PERMISSION_REQUEST_CODE
+            );
+        }
     }
 
-    public void updateFragments(final Collection<BikeStation> stations) {
-        mapFragment.updateStations(stations);
-        listFragment.updateStations(stations);
+    private boolean hasFineLocationPermission() {
+        boolean coarsePermissionGranted = ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED;
+
+        boolean finePermissionGranted = ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED;
+
+        return coarsePermissionGranted && finePermissionGranted;
     }
 
     @Override
-    public void onDestroy() {
-        if (scheduledTask != null) {
-            scheduledTask.cancel(true);
-        }
-        scheduler.shutdownNow();
-        super.onDestroy();
-    }
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    @Override
-    public void onPause() {
-        if (scheduledTask != null) {
-            scheduledTask.cancel(true);
-        }
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        if (scheduledTask != null && scheduledTask.isCancelled()) {
-            startBikeStationUpdateTask(false);
-        }
-        super.onResume();
-    }
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            if (position == Constants.LIST_FRAGMENT_POSITION) {
-                return new BikeStationListFragment();
-            } else {
-                return new BikeStationMapFragment();
+        if (requestCode == Constants.LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setMyLocationEnabled();
+                setInitialLocation();
             }
         }
+    }
 
-        @Override
-        public int getCount() {
-            return Constants.TAB_COUNT;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case Constants.LIST_FRAGMENT_POSITION:
-                    return getString(R.string.list_fragment_tab_title);
-                case Constants.MAP_FRAGMENT_POSITION:
-                    return getString(R.string.map_fragment_tab_title);
-                default:
-                    return getString(R.string.unknown_tab_title);
+    synchronized private void initializeStationMarkers(final Collection<BikeStation> stations) {
+        if (map != null && stations != null) {
+            for (BikeStation station : stations) {
+                MarkerOptions options = new MarkerOptions()
+                        .position(new LatLng(station.getLat(), station.getLon()))
+                        .icon(BitmapDescriptorFactory.fromResource(
+                                Util.getBikeIconMapResource(station.getBikesAvailable())))
+                        .title(station.getName())
+                        .snippet(station.getFreeBikesText(this));
+                Marker marker = map.addMarker(options);
+                markersById.put(station.getId(), marker);
             }
         }
+    }
+
+    private void updateStationMarkers(final Collection<BikeStation> stations) {
+        for (BikeStation station : stations) {
+            Marker marker = markersById.get(station.getId());
+            if (marker != null) {
+                marker.setSnippet(station.getFreeBikesText(this));
+                marker.setIcon(BitmapDescriptorFactory.fromResource(
+                        Util.getBikeIconMapResource(station.getBikesAvailable())));
+            }
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void setMyLocationEnabled() {
+        if (hasFineLocationPermission()) {
+            map.setMyLocationEnabled(true);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void setInitialLocation() {
+        if (hasFineLocationPermission()) {
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(
+                            this,
+                            location -> {
+                                if (location != null) {
+                                    double latitude = location.getLatitude();
+                                    double longitude = location.getLongitude();
+
+                                    setLocation(new LatLng(latitude, longitude));
+                                } else {
+                                    setLocation(Constants.DEFAULT_POSITION);
+                                }
+                            }
+                    ).addOnFailureListener(
+                            this,
+                            exception -> setLocation(Constants.DEFAULT_POSITION)
+                    );
+        } else {
+            setLocation(Constants.DEFAULT_POSITION);
+        }
+    }
+
+    private void setLocation(LatLng location) {
+        map.moveCamera(CameraUpdateFactory.newLatLng(location));
     }
 }

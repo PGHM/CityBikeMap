@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">CityBikes</string>
     <string name="main_activity_title">City bikes</string>
-    <string name="list_fragment_tab_title">List</string>
-    <string name="map_fragment_tab_title">Map</string>
-    <string name="unknown_tab_title">Unknown</string>
     <string name="could_not_load_bike_stations">Could not load bike stations.
         Trying again in few moments.</string>
     <string name="free_bikes">Free bikes: %1$d / %2$d</string>

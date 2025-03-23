@@ -12,23 +12,27 @@ import org.json.JSONObject;
  */
 public class BikeStation {
 
-    private String id;
-    private String name;
-    private double lat;
-    private double lon;
+    private final String id;
+    private final String name;
+    private final double lat;
+    private final double lon;
     private int bikesAvailable;
     private int spacesAvailable;
-    private boolean allowDropoff;
 
-    public BikeStation(String id, String name, double lat, double lon, int bikesAvailable,
-                       int spacesAvailable, boolean allowDropoff) {
+    public BikeStation(
+            String id,
+            String name,
+            double lat,
+            double lon,
+            int bikesAvailable,
+            int spacesAvailable
+    ) {
         this.id = id;
         this.name = name;
         this.lat = lat;
         this.lon = lon;
         this.bikesAvailable = bikesAvailable;
         this.spacesAvailable = spacesAvailable;
-        this.allowDropoff = allowDropoff;
     }
 
     public static BikeStation fromJson(JSONObject obj) throws JSONException {
@@ -38,8 +42,7 @@ public class BikeStation {
                 obj.getDouble("y"),
                 obj.getDouble("x"),
                 obj.getInt("bikesAvailable"),
-                obj.getInt("spacesAvailable"),
-                obj.getBoolean("allowDropoff")
+                obj.getInt("spacesAvailable")
         );
     }
 
@@ -69,20 +72,11 @@ public class BikeStation {
         return bikesAvailable;
     }
 
-    public int getSpacesAvailable() {
-        return spacesAvailable;
-    }
-
     public String getFreeBikesText(Context context) {
-        return String.format(context.getString(R.string.free_bikes),
-                bikesAvailable, this.getTotalSpace());
+        return String.format(context.getString(R.string.free_bikes), bikesAvailable, this.getTotalSpace());
     }
 
-    public int getTotalSpace() {
+    private int getTotalSpace() {
         return bikesAvailable + spacesAvailable;
-    }
-
-    public boolean allowDropoff() {
-        return allowDropoff;
     }
 }
