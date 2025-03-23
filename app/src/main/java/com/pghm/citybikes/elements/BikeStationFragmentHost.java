@@ -1,4 +1,4 @@
-package com.pghm.citybikes.Elements;
+package com.pghm.citybikes.elements;
 
 /**
  * Created by Jussi on 30.6.2016.

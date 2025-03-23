@@ -12,9 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.pghm.citybikes.Constants;
-import com.pghm.citybikes.Elements.BikeStationFragmentHost;
-import com.pghm.citybikes.Elements.NoSwipeViewPager;
 import com.pghm.citybikes.R;
+import com.pghm.citybikes.elements.BikeStationFragmentHost;
+import com.pghm.citybikes.elements.NoSwipeViewPager;
 import com.pghm.citybikes.fragments.BikeStationListFragment;
 import com.pghm.citybikes.fragments.BikeStationMapFragment;
 import com.pghm.citybikes.models.BikeStation;
@@ -41,12 +41,12 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     @BindView(R.id.container) NoSwipeViewPager viewPager;
     @BindView(R.id.tabs) TabLayout tabLayout;
 
-    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture scheduledTask;
     private BikeStationListFragment listFragment;
     private BikeStationMapFragment mapFragment;
     private int fragmentsLoaded = 0;
-    private HashMap<String, BikeStation> stationsById = new HashMap<>();
+    private final HashMap<String, BikeStation> stationsById = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,16 +124,14 @@ public class MainActivity extends AppCompatActivity implements BikeStationFragme
     }
 
     public void startBikeStationUpdateTask(boolean startDelay) {
-        Runnable updateRunnable = new Runnable() {
-            public void run() {
-                updateBikeStations();
-            }
-        };
+        Runnable updateRunnable = this::updateBikeStations;
 
-        scheduledTask = scheduler.scheduleAtFixedRate(updateRunnable,
+        scheduledTask = scheduler.scheduleWithFixedDelay(
+                updateRunnable,
                 startDelay ? Constants.BIKE_STATION_UPDATE_INTERVAL : 0,
                 Constants.BIKE_STATION_UPDATE_INTERVAL,
-                TimeUnit.MILLISECONDS);
+                TimeUnit.MILLISECONDS
+        );
     }
 
     /* Assume that station list does not change during the lifetime of the application */

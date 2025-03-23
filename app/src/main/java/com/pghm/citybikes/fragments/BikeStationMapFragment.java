@@ -22,9 +22,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pghm.citybikes.Constants;
-import com.pghm.citybikes.Elements.BikeStationFragmentHost;
 import com.pghm.citybikes.R;
 import com.pghm.citybikes.Util;
+import com.pghm.citybikes.elements.BikeStationFragmentHost;
 import com.pghm.citybikes.models.BikeStation;
 
 import java.util.Collection;
@@ -39,15 +39,18 @@ public class BikeStationMapFragment extends Fragment {
     private BikeStationFragmentHost host;
     private GoogleMap map;
     private Collection<BikeStation> stations;
-    private HashMap<String, Marker> markersById = new HashMap<>();
+    private final HashMap<String, Marker> markersById = new HashMap<>();
 
     /* Required empty initializer */
     public BikeStationMapFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+            LayoutInflater inflater,
+            ViewGroup container,
+            Bundle savedInstanceState
+    ) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(view);
 
@@ -56,7 +59,7 @@ public class BikeStationMapFragment extends Fragment {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
-            public void onMapReady(GoogleMap googleMap) {
+            public void onMapReady(@NonNull GoogleMap googleMap) {
                 map = googleMap;
                 final Handler handler = new Handler(Looper.getMainLooper());
 
