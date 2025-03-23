@@ -5,7 +5,6 @@ import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(googleMap -> {
             map = googleMap;
-            final Handler handler = new Handler(Looper.getMainLooper());
 
             initializeStationMarkers(stationsById.values());
             map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
