@@ -19,6 +19,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapColorScheme;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pghm.citybikes.Constants;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             map = googleMap;
 
             initializeStationMarkers(stationsById.values());
+            map.setMapColorScheme(MapColorScheme.FOLLOW_SYSTEM);
             map.moveCamera(CameraUpdateFactory.zoomTo(Constants.DEFAULT_ZOOM));
             setMyLocationEnabled();
             setInitialLocation();
