@@ -24,7 +24,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.pghm.citybikes.Constants;
 import com.pghm.citybikes.R;
-import com.pghm.citybikes.Util;
 import com.pghm.citybikes.models.BikeStation;
 import com.pghm.citybikes.network.Requests;
 
@@ -222,8 +221,11 @@ public class MainActivity extends AppCompatActivity {
             for (BikeStation station : stations) {
                 MarkerOptions options = new MarkerOptions()
                         .position(new LatLng(station.getLat(), station.getLon()))
-                        .icon(BitmapDescriptorFactory.fromResource(
-                                Util.getBikeIconMapResource(station.getBikesAvailable())))
+                        .icon(
+                                BitmapDescriptorFactory.fromResource(
+                                    getBikeIconMapResource(station.getBikesAvailable())
+                                )
+                        )
                         .title(station.getName())
                         .snippet(station.getFreeBikesText(this));
                 Marker marker = map.addMarker(options);
@@ -237,8 +239,11 @@ public class MainActivity extends AppCompatActivity {
             Marker marker = markersById.get(station.getId());
             if (marker != null) {
                 marker.setSnippet(station.getFreeBikesText(this));
-                marker.setIcon(BitmapDescriptorFactory.fromResource(
-                        Util.getBikeIconMapResource(station.getBikesAvailable())));
+                marker.setIcon(
+                        BitmapDescriptorFactory.fromResource(
+                                getBikeIconMapResource(station.getBikesAvailable())
+                        )
+                );
             }
         }
     }
@@ -260,7 +265,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (location != null) {
                                     double latitude = location.getLatitude();
                                     double longitude = location.getLongitude();
-
                                     setLocation(new LatLng(latitude, longitude));
                                 } else {
                                     setLocation(Constants.DEFAULT_POSITION);
@@ -277,5 +281,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setLocation(LatLng location) {
         map.moveCamera(CameraUpdateFactory.newLatLng(location));
+    }
+
+    private int getBikeIconMapResource(int bikesAvailable) {
+        if (bikesAvailable == 0) {
+            return R.drawable.red_small;
+        } else if (bikesAvailable < Constants.LOW_BIKE_THRESHOLD) {
+            return R.drawable.yellow_small;
+        } else {
+            return R.drawable.green_small;
+        }
     }
 }

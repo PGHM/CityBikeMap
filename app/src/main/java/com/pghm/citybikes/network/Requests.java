@@ -11,9 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Jussi on 30.6.2016.
- */
 public class Requests {
     public static void fetchBikeData(Context context, final Callback<JSONArray> callback) {
         try {

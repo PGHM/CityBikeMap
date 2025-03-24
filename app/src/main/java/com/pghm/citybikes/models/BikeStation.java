@@ -8,9 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Created by Jussi on 30.6.2016.
- */
 public class BikeStation {
 
     private final String id;
@@ -34,29 +31,6 @@ public class BikeStation {
         this.lon = lon;
         this.bikesAvailable = bikesAvailable;
         this.spacesAvailable = spacesAvailable;
-    }
-
-    public static BikeStation fromJson(JSONObject obj) throws JSONException {
-        int spacesAvailable = parseSpacesAvailable(obj);
-        if (spacesAvailable > 0) {
-            return new BikeStation(
-                    obj.getString("id"),
-                    obj.getString("name"),
-                    obj.getDouble("lat"),
-                    obj.getDouble("lon"),
-                    parseBikesAvailable(obj),
-                    spacesAvailable
-            );
-        } else {
-            throw new JSONException("Bike station object did not have all data");
-        }
-    }
-
-    /* Assume that bike station id, name or location do not change during the lifetime of the app.
-    * Also assume that station did not suddenly have invalid data on bike or space availablity */
-    public void updateFromJson(JSONObject obj) throws JSONException {
-        bikesAvailable = parseBikesAvailable(obj);
-        spacesAvailable = parseSpacesAvailable(obj);
     }
 
     public String getId() {
@@ -85,6 +59,29 @@ public class BikeStation {
 
     private int getTotalSpace() {
         return bikesAvailable + spacesAvailable;
+    }
+
+    /* Assume that bike station id, name or location do not change during the lifetime of the app.
+     * Also assume that station did not suddenly have invalid data on bike or space availablity */
+    public void updateFromJson(JSONObject obj) throws JSONException {
+        bikesAvailable = parseBikesAvailable(obj);
+        spacesAvailable = parseSpacesAvailable(obj);
+    }
+
+    public static BikeStation fromJson(JSONObject obj) throws JSONException {
+        int spacesAvailable = parseSpacesAvailable(obj);
+        if (spacesAvailable > 0) {
+            return new BikeStation(
+                    obj.getString("id"),
+                    obj.getString("name"),
+                    obj.getDouble("lat"),
+                    obj.getDouble("lon"),
+                    parseBikesAvailable(obj),
+                    spacesAvailable
+            );
+        } else {
+            throw new JSONException("Bike station object did not have all data");
+        }
     }
 
     private static int parseBikesAvailable(JSONObject obj) {

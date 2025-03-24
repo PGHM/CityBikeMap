@@ -5,9 +5,6 @@ import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-/**
- * Created by Jussi on 30.6.2016.
- */
 public class NetworkSingleton {
 
     private static NetworkSingleton instance;
