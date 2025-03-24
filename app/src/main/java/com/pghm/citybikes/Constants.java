@@ -5,7 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class Constants {
 
     public static final String BIKE_DATA_URL =
-            "https://api.digitransit.fi/routing/v1/routers/hsl/bike_rental?digitransit-subscription-key=9c43c39a28234c15b6e297f8995522cc";
+            "https://api.digitransit.fi/routing/v2/hsl/gtfs/v1?digitransit-subscription-key=9c43c39a28234c15b6e297f8995522cc";
+    public static final String BIKE_DATA_QUERY = "{ \"query\": \"{ vehicleRentalStations { id name lat lon availableSpaces { byType { count vehicleType { formFactor } } } availableVehicles { byType { count vehicleType { formFactor } } } }}\" }";
     public static final String LOG_NAME = "CityBikes";
 
     public static final LatLng DEFAULT_POSITION = new LatLng(60.169787, 24.938606);

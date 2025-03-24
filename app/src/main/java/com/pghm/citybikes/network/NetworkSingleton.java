@@ -11,7 +11,7 @@ import com.android.volley.toolbox.Volley;
 public class NetworkSingleton {
 
     private static NetworkSingleton instance;
-    private RequestQueue requestQueue;
+    private final RequestQueue requestQueue;
 
     private NetworkSingleton(Context context){
         requestQueue = Volley.newRequestQueue(context);

@@ -122,15 +122,18 @@ public class MainActivity extends AppCompatActivity {
                         BikeStation station = BikeStation.fromJson(result.getJSONObject(i));
                         stationsById.put(station.getId(), station);
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(Constants.LOG_NAME, e.toString());
                     }
                 }
                 initializeStationMarkers(stationsById.values());
                 startBikeStationUpdateTask(true);
             } else {
                 retryBikeStationInitialization();
-                Toast.makeText(MainActivity.this, R.string.could_not_load_bike_stations,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(
+                        MainActivity.this,
+                        R.string.could_not_load_bike_stations,
+                        Toast.LENGTH_LONG
+                ).show();
             }
         });
     }
