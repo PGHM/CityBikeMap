@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Kaupunkipyörät Kartalla</string>
+    <string name="could_not_load_bike_stations">Pyöräasemien lataus epäonnistui. Yritetään uudelleen pian.</string>
+    <string name="free_bikes">Vapaat pyörät: %1$d / %2$d</string>
+</resources>

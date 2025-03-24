@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">CityBikes</string>
-    <string name="main_activity_title">City bikes</string>
-    <string name="could_not_load_bike_stations">Could not load bike stations.
-        Trying again in few moments.</string>
+    <string name="app_name">City Bike Map</string>
+    <string name="could_not_load_bike_stations">Could not load the bike stations. Trying again shortly.</string>
     <string name="free_bikes">Free bikes: %1$d / %2$d</string>
-    <string name="bike_stations_not_loaded_yet">Bike stations not loaded yet, please wait</string>
 </resources>

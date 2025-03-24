@@ -79,10 +79,9 @@ public class MainActivity extends AppCompatActivity {
         if (scheduledTask != null) {
             scheduledTask.cancel(true);
         }
+
         scheduler.shutdownNow();
-
         super.onDestroy();
-
         mapView.onDestroy();
     }
 
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onPause();
-
         mapView.onPause();
     }
 
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         mapView.onLowMemory();
     }
 
-    public void initializeBikeStations() {
+    private void initializeBikeStations() {
         Requests.fetchBikeData(this, result -> {
             if (result != null) {
                 for (int i = 0; i < result.length(); i++) {
@@ -138,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void retryBikeStationInitialization() {
+    private void retryBikeStationInitialization() {
         final Handler handler = new Handler();
         handler.postDelayed(
                 this::initializeBikeStations,
@@ -146,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    public void startBikeStationUpdateTask(boolean startDelay) {
+    private void startBikeStationUpdateTask(boolean startDelay) {
         scheduledTask = scheduler.scheduleWithFixedDelay(
                 this::updateBikeStations,
                 startDelay ? Constants.BIKE_STATION_UPDATE_INTERVAL : 0,
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* Assume that station list does not change during the lifetime of the application */
-    public void updateBikeStations() {
+    private void updateBikeStations() {
         Log.d(Constants.LOG_NAME, "Updating stations");
         Requests.fetchBikeData(this, result -> {
             if (result != null) {
@@ -169,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                             station.updateFromJson(stationObject);
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        Log.e(Constants.LOG_NAME, e.toString());
                     }
                 }
                 updateStationMarkers(stationsById.values());
