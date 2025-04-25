@@ -285,11 +285,11 @@ public class MainActivity extends AppCompatActivity {
 
     private int getBikeIconMapResource(int bikesAvailable) {
         if (bikesAvailable == 0) {
-            return R.drawable.red_small;
+            return R.drawable.red_bike_light;
         } else if (bikesAvailable < Constants.LOW_BIKE_THRESHOLD) {
-            return R.drawable.yellow_small;
+            return R.drawable.yellow_bike_light;
         } else {
-            return R.drawable.green_small;
+            return R.drawable.green_bike_light;
         }
     }
 }
