@@ -238,12 +238,15 @@ public class MainActivity extends AppCompatActivity {
         for (BikeStation station : stations) {
             Marker marker = markersById.get(station.getId());
             if (marker != null) {
-                marker.setSnippet(station.getFreeBikesText(this));
-                marker.setIcon(
-                        BitmapDescriptorFactory.fromResource(
-                                getBikeIconMapResource(station.getBikesAvailable())
-                        )
-                );
+                String freeBikesText = station.getFreeBikesText(this);
+                if (!freeBikesText.equals(marker.getSnippet())) {
+                    marker.setSnippet(station.getFreeBikesText(this));
+                    marker.setIcon(
+                            BitmapDescriptorFactory.fromResource(
+                                    getBikeIconMapResource(station.getBikesAvailable())
+                            )
+                    );
+                }
             }
         }
     }
